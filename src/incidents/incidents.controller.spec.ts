@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IncidentsController } from './incidents.controller';
 import { IncidentsService } from './incidents.service';
 import { CreateIncidentDto } from './dto/create-incident.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 describe('IncidentsController', () => {
   let controller: IncidentsController;
@@ -23,7 +24,10 @@ describe('IncidentsController', () => {
           useValue: mockIncidentsService,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<IncidentsController>(IncidentsController);
     service = module.get<IncidentsService>(IncidentsService);
