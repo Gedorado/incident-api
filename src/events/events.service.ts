@@ -16,8 +16,9 @@ export class EventsService {
     payload: any,
     metadata?: any,
   ): Promise<IncidentEvent> {
+    const normalizedId = incidentId.toLowerCase();
     const event = new this.eventModel({
-      incidentId,
+      incidentId: normalizedId,
       type,
       occurredAt: new Date(),
       payload,
@@ -28,7 +29,7 @@ export class EventsService {
 
   async findByIncidentId(incidentId: string): Promise<IncidentEvent[]> {
     return this.eventModel
-      .find({ incidentId })
+      .find({ incidentId: incidentId.toLowerCase() })
       .sort({ occurredAt: 1 })
       .exec();
   }
